@@ -8,7 +8,10 @@ class NegociacaoController {
         this._listaNegociacoes = new ListaNegociacoes();
         this._negociacoesView = new NegociacoesView($('#negociacoes-view'));
 
+        this._mensagemView = new MensagemView($('#mensagem-view'));
+
         this._negociacoesView.update(this._listaNegociacoes);
+        this._mensagemView.update(new Mensagem());
     }
 
     adiciona(event) {
@@ -20,6 +23,7 @@ class NegociacaoController {
         console.log(DateHelper.dataParaTexto(negociacao.data));
 
         this._negociacoesView.update(this._listaNegociacoes);
+        this._mensagemView.update(new Mensagem('Negociação adicionada com sucesso'));
 
         this._limpaCampos();
     }
