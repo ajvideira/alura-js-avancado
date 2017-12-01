@@ -28,6 +28,14 @@ class NegociacaoController {
         this._limpaCampos();
     }
 
+    apaga(event) {
+        event.preventDefault();
+
+        this._listaNegociacoes.esvazia();
+        this._negociacoesView.update(this._listaNegociacoes);
+        this._mensagemView.update(new Mensagem('Lista de negociações apagada'));
+    }
+
     retornaNegociacao() {
         return new Negociacao(
             DateHelper.textoParaData(this._inputData.value),
