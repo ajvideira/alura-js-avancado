@@ -9,7 +9,7 @@ class NegociacaoController {
         this._negociacoesView = new NegociacoesView($('#negociacoes-view'));
         this._mensagemView = new MensagemView($('#mensagem-view'));
 
-        this._listaNegociacoes = new ListaNegociacoes(this, function(model) {
+        this._listaNegociacoes = new ListaNegociacoes(model => {
             this._negociacoesView.update(model);
         });
 
