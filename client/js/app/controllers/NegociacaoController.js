@@ -6,26 +6,21 @@ class NegociacaoController {
         this._inputQuantidade = $('#quantidade');
         this._inputValor = $('#valor');
 
-        let self = this;
-
-        this._listaNegociacoes = new Proxy(new ListaNegociacoes(), {
-            get(target, prop, receiver) {
-                if (['adiciona', 'esvazia'].includes(prop) && typeof (target[prop]) == typeof (Function)) {
-                    return function () {
-                        console.log(`Interceptando ${prop}`);
-                        Reflect.apply(target[prop], target, arguments);
-                        console.log(target);
-                        self._negociacoesView.update(target);
-                    }
-                }
-                return Reflect.get(target, prop, receiver);
-            }
-        });
-
         this._negociacoesView = new NegociacoesView($('#negociacoes-view'));
+
+        this._listaNegociacoes = ProxyFactory.criar(
+            new ListaNegociacoes(), ['adiciona', 'esvazia'],
+            model => this._negociacoesView.update(model)
+        );
+        this._negociacoesView.update(this._listaNegociacoes);
+
         this._mensagemView = new MensagemView($('#mensagem-view'));
 
-        this._mensagemView.update(new Mensagem());
+        this._mensagem = ProxyFactory.criar(
+            new Mensagem(), ['texto'],
+            model => this._mensagemView.update(model)
+        );
+        this._mensagemView.update(this._mensagem);
     }
 
     adiciona(event) {
@@ -34,9 +29,7 @@ class NegociacaoController {
         let negociacao = this.retornaNegociacao();
         this._listaNegociacoes.adiciona(negociacao);
 
-        console.log(DateHelper.dataParaTexto(negociacao.data));
-
-        this._mensagemView.update(new Mensagem('Negociação adicionada com sucesso'));
+        this._mensagem.texto = 'Negociação adicionada com sucesso';
 
         this._limpaCampos();
     }
@@ -45,7 +38,7 @@ class NegociacaoController {
         event.preventDefault();
 
         this._listaNegociacoes.esvazia();
-        this._mensagemView.update(new Mensagem('Lista de negociações apagada'));
+        this._mensagem.texto = 'Lista de negociações apagada';
     }
 
     retornaNegociacao() {
