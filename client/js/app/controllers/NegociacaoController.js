@@ -23,13 +23,16 @@ class NegociacaoController {
 
     adiciona(event) {
         event.preventDefault();
+        try {
+            let negociacao = this.retornaNegociacao();
+            this._listaNegociacoes.adiciona(negociacao);
 
-        let negociacao = this.retornaNegociacao();
-        this._listaNegociacoes.adiciona(negociacao);
+            this._mensagem.texto = 'Negociação adicionada com sucesso';
 
-        this._mensagem.texto = 'Negociação adicionada com sucesso';
-
-        this._limpaCampos();
+            this._limpaCampos();
+        } catch (erro) {
+            this._mensagem.texto = erro;
+        }
     }
 
     apaga(event) {
