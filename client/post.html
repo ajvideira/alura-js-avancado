@@ -40,19 +40,20 @@
                 valor: document.getElementById('valor').value
             };
 
-            let xhr = new XMLHttpRequest();
-            xhr.open('POST', 'negociacoes');
-            xhr.setRequestHeader('Content-type', 'application/json');
-
-            xhr.onreadystatechange = () => {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    console.log(xhr.responseText);
-                }
-            };
-
-            xhr.send(JSON.stringify(negociacao));
+            let http = new HttpClient();
+            http.post('negociacoes', negociacao)
+                .then(result => {
+                    document.getElementById('data').value = '';
+                    document.getElementById('quantidade').value = '';
+                    document.getElementById('valor').value = '';
+                    alert('Negociação enviada com sucesso');
+                })
+                .catch(erro =>
+                    alert(`Não foi possível enviar a negociação: ${erro}`)
+                );
         }
     </script>
+    <script src="js/app/services/HttpClient.js"></script>
 </body>
 
 </html>
