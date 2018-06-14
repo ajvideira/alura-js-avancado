@@ -21,29 +21,40 @@ class NegociacaoController {
         this.ordemAtual = '';
 
         ConnectionFactory.getConnection()
-            .then(connection => console.log(connection))
-            .catch(erro => console.log(erro));
+            .then(conexao => new NegociacaoDao(conexao))
+            .then(dao => dao.listaTodos())
+            .then(negociacoes =>
+                negociacoes.forEach(negociacao =>
+                    this._listaNegociacoes.adiciona(negociacao)
+                )
+            ).catch(erro => this._mensagem.texto = erro);
     }
 
     adiciona(event) {
         event.preventDefault();
-        try {
-            let negociacao = this.retornaNegociacao();
-            this._listaNegociacoes.adiciona(negociacao);
 
-            this._mensagem.texto = 'Negociação adicionada com sucesso';
+        let negociacao = this.retornaNegociacao();
 
-            this._limpaCampos();
-        } catch (erro) {
-            this._mensagem.texto = erro;
-        }
+        ConnectionFactory.getConnection()
+            .then(conexao => new NegociacaoDao(conexao))
+            .then(dao => dao.adiciona(negociacao))
+            .then(() => {
+                this._listaNegociacoes.adiciona(negociacao);
+                this._mensagem.texto = 'Negociação adicionada com sucesso';
+                this._limpaCampos();
+            }).catch(erro => this._mensagem.texto = erro);
     }
 
     apaga(event) {
         event.preventDefault();
 
-        this._listaNegociacoes.esvazia();
-        this._mensagem.texto = 'Lista de negociações apagada';
+        ConnectionFactory.getConnection()
+            .then(conexao => new NegociacaoDao(conexao))
+            .then(dao => dao.apagaTodos())
+            .then(() => {
+                this._listaNegociacoes.esvazia();
+                this._mensagem.texto = 'Negociações apagadas com sucesso';
+            }).catch(erro => this._mensagem.texto = erro);
     }
 
     retornaNegociacao() {
