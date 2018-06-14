@@ -10,11 +10,15 @@
     <script src="./js/app/models/Negociacao.js"></script>
     <script>
         var connection = null
-        var openRequest = window.indexedDB.open('aluraframe', 1);
+        var openRequest = window.indexedDB.open('aluraframe', 2);
 
         openRequest.onupgradeneeded = e => {
             console.log('Banco criado com sucesso');
             connection = e.target.result;
+            if (connection.objectStoreNames.contains('negociacoes')) {
+                connection.deleteObjectStore('negociacoes');
+            }
+
             connection.createObjectStore('negociacoes', {
                 autoIncrement: true
             });

@@ -19,6 +19,10 @@ class NegociacaoController {
         );
 
         this.ordemAtual = '';
+
+        ConnectionFactory.getConnection()
+            .then(connection => console.log(connection))
+            .catch(erro => console.log(erro));
     }
 
     adiciona(event) {
