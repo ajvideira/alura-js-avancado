@@ -16,8 +16,7 @@ class NegociacaoDao {
             };
 
             request.onerrror = e => {
-                console.log(e.target.result);
-                reject('Não foi possível adicionar a negociação');
+                reject(e.target.error);
             };
         });
     }
